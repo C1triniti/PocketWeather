@@ -11,6 +11,6 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: darkMode,
-    home: HomePage(),
+    home: const HomePage(),
   ));
 }

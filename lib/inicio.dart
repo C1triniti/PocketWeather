@@ -1,3 +1,4 @@
+import 'package:app_climatico/predictions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _fetchWeatherForCity("Palmas, BR"); // Initial weather for Palmas
+    _fetchWeatherForCity("Palmas");
   }
 
   void _fetchWeatherForCity(String city) async {
@@ -31,7 +32,6 @@ class _HomePageState extends State<HomePage> {
         _weather = weather;
       });
     } catch (error) {
-      // Handle errors, e.g., display an error message to the user
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error.toString())),
       );
@@ -51,49 +51,56 @@ class _HomePageState extends State<HomePage> {
         child: CircularProgressIndicator(),
       );
     }
-    return SizedBox(
-      width: MediaQuery.sizeOf(context).width,
-      height: MediaQuery.sizeOf(context).height,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-
-          _locationHeader(),
-
-          const SizedBox(
-            height: 20,
+    return Stack(
+      children: [
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width,
+          height: MediaQuery.sizeOf(context).height,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _locationHeader(),
+              const SizedBox(
+                height: 20,
+              ),
+              _dateTimeInfo(),
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.05,
+              ),
+              _weatherIcon(),
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.02,
+              ),
+              _currentTemp(),
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.02,
+              ),
+              _extraInfo(),
+            ],
           ),
-
-          _dateTimeInfo(),
-
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height * 0.05,
+        ),
+        Positioned(
+          top: 30,
+          right: 40,
+          child: IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PredictionPage(weather: _weather)));
+            },
+            icon: const Icon(
+              Icons.calendar_today,
+              size: 35,
+            ),
           ),
-
-          _weatherIcon(),
-
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height * 0.02,
-          ),
-
-          _currentTemp(),
-
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height * 0.02,
-          ),
-
-          _extraInfo(),
-
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _locationHeader(){
     return Container(
-      width: MediaQuery.sizeOf(context).width * 0.80,
+      width: MediaQuery.sizeOf(context).width * 0.60,
       decoration: BoxDecoration(
         color: Colors.deepPurpleAccent,
         borderRadius: BorderRadius.circular(20),
@@ -116,7 +123,7 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () {
               _fetchWeatherForCity(_cityController.text);
-              print(_weather?.date!);
+              print(_weather?.areaName);
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(20),
@@ -132,6 +139,8 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+
+
   }
 
   Widget _dateTimeInfo(){
@@ -267,6 +276,5 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-    
 
 }
