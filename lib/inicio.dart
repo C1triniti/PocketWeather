@@ -191,8 +191,8 @@ class _HomePageState extends State<HomePage> {
               image: DecorationImage(
                   image: NetworkImage(
                       "http://openweathermap.org/img/wn/${_weather?.weatherIcon}@4x.png"
-                  )
-              )
+                  ),
+              ),
           ),
         ),
         Text(
