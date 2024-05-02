@@ -1,8 +1,12 @@
 import 'package:app_climatico/predictions.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 import 'const.dart';
+import 'componentes/extraInfo.dart';
+import 'componentes/currentTemp.dart';
+import 'componentes/weatherIcon.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +19,6 @@ class _HomePageState extends State<HomePage> {
 
   final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY,language: Language.PORTUGUESE_BRAZIL);
 
-
   Weather? _weather;
   final _cityController = TextEditingController();
 
@@ -23,11 +26,26 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _fetchWeatherForCity("Palmas");
+    //_fetchWeatherForLocation();
   }
 
   void _fetchWeatherForCity(String city) async {
     try {
       final weather = await _wf.currentWeatherByCityName(city);
+      setState(() {
+        _weather = weather;
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
+    }
+  }
+
+  void _fetchWeatherForLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      final weather = await _wf.currentWeatherByLocation(position.latitude, position.longitude);
       setState(() {
         _weather = weather;
       });
@@ -69,15 +87,31 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: MediaQuery.sizeOf(context).height * 0.05,
               ),
-              _weatherIcon(),
+
+              WeatherIcon(
+                networkImage: "http://openweathermap.org/img/wn/${_weather?.weatherIcon}@4x.png",
+                weatherDesc: _weather?.weatherDescription ?? "",
+              ),
+
               SizedBox(
                 height: MediaQuery.sizeOf(context).height * 0.02,
               ),
-              _currentTemp(),
+
+              CurrentTemp(
+                currentTemp: "${_weather?.temperature?.celsius?.toStringAsFixed(0)}º C",
+              ),
+
               SizedBox(
                 height: MediaQuery.sizeOf(context).height * 0.02,
               ),
-              _extraInfo(),
+
+              ExtraInfo(
+                maxTemp: "Maxima: ${_weather?.tempMax?.celsius?.toStringAsFixed(0)}º C",
+                minTemp: "Mínima: ${_weather?.tempMin?.celsius?.toStringAsFixed(0)}º C",
+                windSpeed: "Vel.Vento: ${_weather?.windSpeed?.toStringAsFixed(0)} m/s",
+                humidity: "Umidade: ${_weather?.humidity?.toStringAsFixed(0)} %",
+              ),
+
             ],
           ),
         ),
@@ -123,7 +157,6 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () {
               _fetchWeatherForCity(_cityController.text);
-              print(_weather?.areaName);
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(20),
@@ -139,8 +172,6 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-
-
   }
 
   Widget _dateTimeInfo(){
@@ -148,7 +179,7 @@ class _HomePageState extends State<HomePage> {
 
     return Column(
       children: [
-        Text(DateFormat("h:mm a").format(now),
+        Text("${_weather?.areaName}, ${_weather?.country}",
           style: const TextStyle(
             fontSize: 35,
           ),
@@ -275,6 +306,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
 }
