@@ -8,7 +8,7 @@ class LocationHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Container(
-      width: MediaQuery.sizeOf(context).width * 0.60,
+      width: MediaQuery.sizeOf(context).width * 0.80,
       decoration: BoxDecoration(
         color: Colors.deepPurpleAccent,
         borderRadius: BorderRadius.circular(20),

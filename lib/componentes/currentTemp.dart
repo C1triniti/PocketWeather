@@ -9,7 +9,7 @@ class CurrentTemp extends StatelessWidget {
     return Text(
       currentTemp,
       style: const TextStyle(
-        fontSize: 90,
+        fontSize: 80,
       ),
     );
   }

@@ -1,11 +1,12 @@
 import 'package:app_climatico/componentes/weatherList.dart';
 import 'package:app_climatico/const.dart';
+import 'package:app_climatico/weatherProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather/weather.dart';
 
 class PredictionPage extends StatefulWidget {
-  final Weather? weather;
-  const PredictionPage({super.key, this.weather});
+  const PredictionPage({super.key});
 
   @override
   State<PredictionPage> createState() => _PredictionPageState();
@@ -23,7 +24,8 @@ class _PredictionPageState extends State<PredictionPage> {
   }
 
   Future<List<Weather>> _fetchForecast() async {
-    final cityName = widget.weather?.areaName ?? "";
+    final weather = context.watch<WeatherProvider>().weather;
+    final cityName = weather?.areaName ?? "";
     forecast = await _wf.fiveDayForecastByCityName(cityName);
     return forecast;
   }

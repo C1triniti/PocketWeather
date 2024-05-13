@@ -1,5 +1,6 @@
-import 'package:app_climatico/predictions.dart';
+import 'package:app_climatico/weatherProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather/weather.dart';
 import 'componentes/dateTimeInfo.dart';
 import 'componentes/locationHeader.dart';
@@ -18,22 +19,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY,language: Language.PORTUGUESE_BRAZIL);
-
-  Weather? _weather;
   final _cityController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchWeatherForCity("Palmas");
-  }
 
   void _fetchWeatherForCity(String city) async {
     try {
       final weather = await _wf.currentWeatherByCityName(city);
-      setState(() {
-        _weather = weather;
-      });
+      context.read<WeatherProvider>().setWeather(weather);
+
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error.toString())),
@@ -49,7 +42,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildUI(){
+    final _weather = context.watch<WeatherProvider>().weather;
     if (_weather == null) {
+      _fetchWeatherForCity("Palmas");
       return const Center(
         child: CircularProgressIndicator(),
       );
@@ -64,6 +59,11 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.02,
+              ),
+
               LocationHeader(
                 controller: _cityController,
                 onSearchPressed: () {
@@ -75,17 +75,17 @@ class _HomePageState extends State<HomePage> {
               ),
 
               DateTimeInfo(
-                weather: _weather!.date!,
-                areaInfo: "${_weather?.areaName}, ${_weather?.country}",
+                weather: _weather.date!,
+                areaInfo: "${_weather.areaName}, ${_weather.country}",
               ),
 
               SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.05,
+                height: MediaQuery.sizeOf(context).height * 0.02,
               ),
 
               WeatherIcon(
-                networkImage: "http://openweathermap.org/img/wn/${_weather?.weatherIcon}@4x.png",
-                weatherDesc: _weather?.weatherDescription ?? "",
+                networkImage: "http://openweathermap.org/img/wn/${_weather.weatherIcon}@4x.png",
+                weatherDesc: _weather.weatherDescription ?? "",
               ),
 
               SizedBox(
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               ),
 
               CurrentTemp(
-                currentTemp: "${_weather?.temperature?.celsius?.toStringAsFixed(0)}º C",
+                currentTemp: "${_weather.temperature?.celsius?.toStringAsFixed(0)}º C",
               ),
 
               SizedBox(
@@ -101,30 +101,16 @@ class _HomePageState extends State<HomePage> {
               ),
 
               ExtraInfo(
-                maxTemp: "Maxima: ${_weather?.tempMax?.celsius?.toStringAsFixed(0)}º C",
-                minTemp: "Mínima: ${_weather?.tempMin?.celsius?.toStringAsFixed(0)}º C",
-                windSpeed: "Vel.Vento: ${_weather?.windSpeed?.toStringAsFixed(0)} m/s",
-                humidity: "Umidade: ${_weather?.humidity?.toStringAsFixed(0)} %",
+                maxTemp: "Maxima: ${_weather.tempMax?.celsius?.toStringAsFixed(0)}º C",
+                minTemp: "Mínima: ${_weather.tempMin?.celsius?.toStringAsFixed(0)}º C",
+                windSpeed: "Vel.Vento: ${_weather.windSpeed?.toStringAsFixed(0)} m/s",
+                humidity: "Umidade: ${_weather.humidity?.toStringAsFixed(0)} %",
               ),
 
             ],
           ),
         ),
-        Positioned(
-          top: 30,
-          right: 40,
-          child: IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => PredictionPage(weather: _weather)));
-            },
-            icon: const Icon(
-              Icons.calendar_today,
-              size: 35,
-            ),
-          ),
-        ),
       ],
     );
   }
-
 }

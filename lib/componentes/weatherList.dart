@@ -43,17 +43,25 @@ class WeatherList extends StatelessWidget {
                           Text(DateFormat("h:mm a").format(forecasts.date!)),
                         ],
                       ),
-                      subtitle: Row(
+
+
+                      subtitle: Column(
                         children: [
-                          const Icon(Icons.thermostat_outlined),
+                          Row(
+                            children: [
+                              const Icon(Icons.thermostat_outlined),
+                              Text("Máxima: ${forecasts.tempMax?.celsius?.toStringAsFixed(0)} ºC"),
+                            ],
+                          ),
 
-                          Text("Máxima: ${forecasts.tempMax?.celsius?.toStringAsFixed(0)} ºC"),
+                          const SizedBox(height: 5),
 
-                          const SizedBox(width: 10),
-
-                          const Icon(Icons.thermostat),
-
-                          Text("Sens.térmica: ${forecasts.tempFeelsLike?.celsius?.toStringAsFixed(0)} ºC"),
+                          Row(
+                            children: [
+                              const Icon(Icons.thermostat_outlined),
+                              Text("Sens.térmica: ${forecasts.tempFeelsLike?.celsius?.toStringAsFixed(0)} ºC"),
+                            ],
+                          ),
                         ],
                       ),
                       trailing: Row(

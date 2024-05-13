@@ -14,11 +14,11 @@ class DateTimeInfo extends StatelessWidget {
       children: [
         Text(areaInfo,
           style: const TextStyle(
-            fontSize: 35,
+            fontSize: 30,
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         Row(
           mainAxisSize: MainAxisSize.max,
@@ -28,13 +28,13 @@ class DateTimeInfo extends StatelessWidget {
             Text(
               DateFormat("EEEE").format(now),
               style: const TextStyle(
-                fontSize: 35,
+                fontSize: 30,
               ),
             ),
             Text(
               " ${DateFormat("dd.MM.yyyy").format(now)}",
               style: const TextStyle(
-                fontSize: 35,
+                fontSize: 30,
               ),
             ),
           ],
