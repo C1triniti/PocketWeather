@@ -43,38 +43,26 @@ class WeatherList extends StatelessWidget {
                           Text(DateFormat("h:mm a").format(forecasts.date!)),
                         ],
                       ),
-
-
-                      subtitle: Column(
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.thermostat_outlined),
-                              Text("Máxima: ${forecasts.tempMax?.celsius?.toStringAsFixed(0)} ºC"),
-                            ],
-                          ),
-
-                          const SizedBox(height: 5),
-
-                          Row(
-                            children: [
-                              const Icon(Icons.thermostat_outlined),
-                              Text("Sens.térmica: ${forecasts.tempFeelsLike?.celsius?.toStringAsFixed(0)} ºC"),
-                            ],
-                          ),
-                        ],
-                      ),
-                      trailing: Row(
+                      subtitle: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(forecasts.weatherDescription ?? ""),
 
+                          Image.network(
+                            "http://openweathermap.org/img/wn/${forecasts.weatherIcon}@4x.png",
+                            width: 100,
+                            height: 100,
+                          ),
                           const SizedBox(width: 5),
 
-                          Image.network("http://openweathermap.org/img/wn/${forecasts.weatherIcon}@4x.png"),
+                          Text(forecasts.weatherDescription ?? ""),
                         ],
+                      ),
+                      trailing: Text(
+                          "${forecasts.tempMax?.celsius?.toStringAsFixed(0)}ºC",
+                        style: const TextStyle(
+                          fontSize: 30,
+                        ),
                       )
-                    //Text(forecasts.weatherDescription ?? ""),
                   ),
                 ),
               );

@@ -1,11 +1,12 @@
+import 'package:app_climatico/Telas/weather_map.dart';
 import 'package:app_climatico/const.dart';
-import 'package:app_climatico/predictions.dart';
-import 'package:app_climatico/weatherProvider.dart';
+import 'package:app_climatico/Telas/predictions.dart';
+import 'package:app_climatico/Providers/weatherProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'inicio.dart';
+import 'Telas/inicio.dart';
 
 
 void main() {
@@ -29,6 +30,7 @@ class _MyAppState extends State<MyApp> {
   final List<Widget> _pages = [
     const HomePage(),
     const PredictionPage(),
+    const MapSample(),
   ];
 
 
@@ -54,6 +56,10 @@ class _MyAppState extends State<MyApp> {
               NavigationDestination(
                   icon: Icon(Icons.calendar_month),
                   label: "Previsões"
+              ),
+              NavigationDestination(
+                  icon: Icon(Icons.map),
+                  label: "Maps"
               ),
             ],
           ),

@@ -1,6 +1,6 @@
 import 'package:app_climatico/componentes/weatherList.dart';
 import 'package:app_climatico/const.dart';
-import 'package:app_climatico/weatherProvider.dart';
+import 'package:app_climatico/Providers/weatherProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/weather.dart';
